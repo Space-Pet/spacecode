@@ -24,14 +24,19 @@ struct EditGearView: View {
     @Binding var path: NavigationPath
     
     var body: some View {
-        NavigationStack(path: $path) {
-            GearFields(gear: gear)
-            
-            EditGearActionsView
-            
-                .navigationTitle(gear.model)
-                .navigationBarTitleDisplayMode(.inline)
+        NavigationStack{
+            VStack (spacing: 10){
+                GearFields(gear: gear)
+                
+                EditGearActionsView
+                Spacer()
+            }
         }
+        .navigationTitle(gear.model)
+        .alignmentGuide(.leading, computeValue: { dimension in
+            dimension[.leading]
+        })
+        .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .keyboard) {
                 HStack {
@@ -46,9 +51,11 @@ struct EditGearView: View {
                 
             }
         }
+        
         .alert(isPresented: $showAlert) {
             Alert(title: Text(alertTitle), message: Text(alertMessage), dismissButton: .default(Text("OK")))
         }
+        
     }
     
     var EditGearActionsView: some View {
@@ -108,6 +115,7 @@ struct EditGearView: View {
             }
         }
     }
+        
 }
 
 struct WeightField: View {
@@ -198,6 +206,7 @@ struct GearFields: View {
     
     var body: some View {
         Form {
+            
             Section("Required") {
                 TextField("Brand", text: $gear.brand)
                 

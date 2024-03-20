@@ -71,21 +71,33 @@ struct NigelTabsView: View {
     @State private var packsPath = NavigationPath()
     @State private var gearPath = NavigationPath()
     
+    @State private var tab1Id = UUID()
+    @State private var tab2Id = UUID()
+    
+    
     var body: some View {
         ZStack {
             TabView(selection: $selectedTab) {
-                TabOneView(path: $packsPath)
-                    .tag(NigelTab.packs)
+                NavigationView{
+                    TabOneView(path: $packsPath)
+                        .tag(NigelTab.packs)
+                }.id(tab1Id)
                 
                 GearLockerView(path: $gearPath)
                     .tag(NigelTab.gear)
+                    .id(tab2Id)
             }
             
             CustomTabView(selectedTab: $selectedTab) {
                 // this is "action()"
                 if selectedTab == .gear {
                     gearPath = NavigationPath()
+                    tab2Id = UUID()
                     print("clicked gear")
+                } else if selectedTab == .packs {
+                    
+                    tab1Id = UUID()
+                    print("clicked packs")
                 }
             }
         }
@@ -96,20 +108,17 @@ struct TabOneView: View {
     @Binding var path: NavigationPath
     
     var body: some View {
-        NavigationStack(path: $path) {
-            VStack {
-                NavigationLink("Page 1", value: 2)
-            }
-            .navigationDestination(for: Int.self) { number in
-                PageTwoView(path: $path, number: number)
+        VStack {
+            NavigationLink(destination:   PageTwoView( number: 2)) {
+                Text("Go To Page 2")
             }
         }
+        
         
     }
 }
 
 struct PageTwoView: View {
-    @Binding var path: NavigationPath
     let number: Int
     
     var body: some View {
@@ -123,6 +132,6 @@ struct TabTwoView: View {
     }
 }
 
-#Preview {
-    NigelTabsView()
-}
+//#Preview {
+//    NigelTabsView()
+//}

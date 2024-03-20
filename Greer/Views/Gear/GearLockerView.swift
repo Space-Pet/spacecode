@@ -30,7 +30,7 @@ struct GearLockerView: View {
     }
     
     var body: some View {
-        NavigationStack(path: $path) {
+        NavigationView {
             VStack {
                 if (gears.isEmpty) {
                     ContentUnavailableView {
@@ -97,13 +97,8 @@ struct GearLockerView: View {
     var GearListView: some View {
         List {
             ForEach(gears) { gear in
-                VStack {
-                    NavigationLink {
-                        EditGearView(gear: gear, showToast: $showToast, path: $path)
-                        
-                    } label: {
-                        GearRow(gear: gear)
-                    }
+                NavigationLink (destination:  EditGearView(gear: gear, showToast: $showToast, path: $path) ){
+                    GearRow(gear: gear)
                 }
             }
             .onDelete(perform: { indexSet in
